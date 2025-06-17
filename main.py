@@ -4,7 +4,6 @@ from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
-from langchain.agent import create_tool_calling_agent
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 from tools import search_tool
 
@@ -43,13 +42,13 @@ tools = [search_tool]
 agent = create_tool_calling_agent(
     llm = llm,
     promt=prompt,
-    tools=[]
+    tools=tools
 )
 
-agent_executor = AgentExecutor(agent=agent, tools=[], verbose=True)
+agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 query = input("How can I help you today?")
 raw_response = agent_executor.invoke({"query": query})
-print(raw_response)
+
 
 try:
     structured_response = parser.parse(raw_response.get("output")[0]["text"]) 
